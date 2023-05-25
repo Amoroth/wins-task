@@ -59,9 +59,29 @@ class ArtService
 
         // map artworks to ArtModel
         $artworks = array_map(function ($artwork) {
-            return new ArtModel($artwork);
+            return new ArtModel(array_merge($artwork, ['image_url' => $this->getArtworkImage($artwork['image_id'])]));
         }, $artworks['data']);
 
         return $artworks;
+    }
+
+    public function getArtworkImage(string $imageId)
+    {
+        if (CacheService::getImage($imageId)) {
+            return CacheService::getImage($imageId);
+        }
+
+        $client = new HttpClient();
+        $res = $client->request('GET', "$this->imageUrl/$imageId/full/843,/0/default.jpg");
+
+        if ($res->getStatusCode() !== 200) {
+            throw new \Exception('Error fetching image');
+        }
+
+        $image = $res->getBody()->getContents();
+
+        $sepiaImage = ImageHelper::sepia($image);
+
+        return CacheService::cacheImage($imageId, $sepiaImage);
     }
 }
