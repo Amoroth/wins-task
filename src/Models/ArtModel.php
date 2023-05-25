@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Services\CacheService;
-
 class ArtModel
 {
     public $id;

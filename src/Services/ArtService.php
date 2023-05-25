@@ -67,10 +67,12 @@ class ArtService
 
     public function getArtworkImage(string $imageId)
     {
+        // if an image is already cached, return it
         if (CacheService::getImage($imageId)) {
             return CacheService::getImage($imageId);
         }
 
+        // otherwise, fetch it from the api
         $client = new HttpClient();
         $res = $client->request('GET', "$this->imageUrl/$imageId/full/843,/0/default.jpg");
 
@@ -80,8 +82,10 @@ class ArtService
 
         $image = $res->getBody()->getContents();
 
+        // apply sepia filter to image
         $sepiaImage = ImageHelper::sepia($image);
 
+        // cache image
         return CacheService::cacheImage($imageId, $sepiaImage);
     }
 }
