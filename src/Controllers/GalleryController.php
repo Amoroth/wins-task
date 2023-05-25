@@ -11,7 +11,13 @@ class GalleryController
 {
     public function index(Request $request, Response $response, $args): Response
     {
-        $artworks = (new ArtService())->getArtworks();
+        $artworksPage = $request->getQueryParams()['page'] ?? 0;
+        $artworks = (new ArtService())->getArtworks($artworksPage);
+
+        if ($request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest') {
+            $response->getBody()->write(json_encode($artworks));
+            return $response->withHeader('Content-Type', 'application/json');
+        }
 
         $view = Twig::fromRequest($request);
         return $view->render($response, 'gallery.html', [
