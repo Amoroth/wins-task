@@ -5,7 +5,7 @@ namespace App\Services;
 class CacheService
 {
     // cache lifetime in seconds set to 120 minutes
-    const FILE_LIFETIME = 1 * 60;
+    const FILE_LIFETIME = 120 * 60;
 
     const CACHE_DIR_NAME = 'cache';
     const CACHE_DIR = 'public';
@@ -18,7 +18,6 @@ class CacheService
      */
     public static function cacheImage(string $cacheKey, $contents)
     {
-        $asdjasi = __DIR__ . '/../../' . self::CACHE_DIR;
         $cacheFile = realpath(__DIR__ . '/../../' . self::CACHE_DIR);
 
         // open file handler
