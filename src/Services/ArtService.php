@@ -9,7 +9,7 @@ use App\Helpers\ImageHelper;
 class ArtService
 {
     const API_URL = 'https://api.artic.edu/api/v1';
-    const ARTWORKS_PER_PAGE = 10;
+    const ARTWORKS_PER_PAGE = 12;
 
     private $imageUrl = '';
 
