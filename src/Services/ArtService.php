@@ -4,11 +4,14 @@ namespace App\Services;
 
 use GuzzleHttp\Client as HttpClient;
 use App\Models\ArtModel;
+use App\Helpers\ImageHelper;
 
 class ArtService
 {
     const API_URL = 'https://api.artic.edu/api/v1';
     const ARTWORKS_PER_PAGE = 10;
+
+    private $imageUrl = '';
 
     /**
      * Get artworks from api
@@ -16,15 +19,32 @@ class ArtService
      * @param int $page Page number
      * @return ArtModel[]
      */
-    public function get_artworks(int $page = 0)
+    public function getArtworks(int $page = 0)
     {
         // fetch artworks from api using guzzle
         $client = new HttpClient();
-        $res = $client->request('GET', self::API_URL . '/artworks', [
+        $res = $client->request('GET', self::API_URL . '/artworks/search', [
             'query' => [
-                'limit' => self::ARTWORKS_PER_PAGE,
-                'page' => $page,
+                'size' => self::ARTWORKS_PER_PAGE,
+                'from' => $page * self::ARTWORKS_PER_PAGE,
+                'query' => [
+                    'bool' => [
+                        'must' => [
+                            [
+                                'exists' => [
+                                    'field' => 'image_id'
+                                ]
+                            ],
+                            [
+                                'term' => [
+                                    'api_model' => 'artworks'
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
                 'fields' => 'id,image_id,api_link,title,artist_title'
+
             ]
         ]);
 
@@ -33,6 +53,9 @@ class ArtService
         }
 
         $artworks = json_decode($res->getBody()->getContents(), true);
+
+        // save image url from response config for later use
+        $this->imageUrl = $artworks['config']['iiif_url'];
 
         // map artworks to ArtModel
         $artworks = array_map(function ($artwork) {

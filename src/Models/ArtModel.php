@@ -7,17 +7,19 @@ use App\Services\CacheService;
 class ArtModel
 {
     public $id;
-    public $image_id;
-    public $api_link;
+    public $imageId;
+    public $apiLink;
     public $title;
-    public $artist_title;
+    public $artistTitle;
+    public $imageUrl;
 
     public function __construct(array $artwork)
     {
         $this->id = $artwork['id'];
-        $this->image_id = $artwork['image_id'];
-        $this->api_link = $artwork['api_link'];
+        $this->imageId = $artwork['image_id'];
+        $this->apiLink = $artwork['api_link'];
         $this->title = $artwork['title'];
-        $this->artist_title = $artwork['artist_title'];
+        $this->artistTitle = $artwork['artist_title'];
+        $this->imageUrl = $artwork['image_url'];
     }
 }
