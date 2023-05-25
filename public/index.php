@@ -1,14 +1,21 @@
 <?php
 
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
+use Slim\Views\Twig;
+use Slim\Views\TwigMiddleware;
 use App\Controllers\GalleryController;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 // Instantiate App
 $app = AppFactory::create();
+
+$twig = Twig::create(__DIR__ . '/../src/Templates', [
+    'cache' => false,
+    'auto_reload' => true
+]);
+
+$app->add(TwigMiddleware::create($app, $twig));
 
 // Add routing middleware
 $app->addRoutingMiddleware();

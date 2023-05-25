@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container-lg py-5">
+  <h1>Galeria Art Institute of Chicago</h1>
+
+  <!-- display all artworks in a masonry grid -->
+  <div class="row mt-5">
+  {% for artwork in artworks %}
+  <div class="col-lg-4 col-sm-6">
+    <img src="{{ artwork.imageUrl }}" alt="{{ artwork.title }}" class="img-fluid">
+    <h4>{{ artwork.title }}</h4>
+    <p>{{ artwork.artistTitle }}</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
