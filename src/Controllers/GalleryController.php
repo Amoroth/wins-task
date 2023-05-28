@@ -12,7 +12,14 @@ class GalleryController
     public function index(Request $request, Response $response, $args): Response
     {
         $artworksPage = $request->getQueryParams()['page'] ?? 0;
-        $artworks = (new ArtService())->getArtworks($artworksPage);
+
+        try {
+            $artworks = (new ArtService())->getArtworks($artworksPage);
+        } catch (\Exception $error) {
+            // log $error
+
+            return $response->withStatus(500);
+        }
 
         if ($request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest') {
             $response->getBody()->write(json_encode($artworks));
